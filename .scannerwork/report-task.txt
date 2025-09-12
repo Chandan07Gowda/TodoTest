@@ -1,0 +1,6 @@
+projectKey=TestToDo
+serverUrl=http://localhost:9000
+serverVersion=25.9.0.112764
+dashboardUrl=http://localhost:9000/dashboard?id=TestToDo
+ceTaskId=87cf4760-d909-476e-a829-c857a32819fe
+ceTaskUrl=http://localhost:9000/api/ce/task?id=87cf4760-d909-476e-a829-c857a32819fe
