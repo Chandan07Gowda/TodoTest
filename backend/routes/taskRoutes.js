@@ -1,15 +1,14 @@
-const express=require('express');
-const TodoController=require('../controller/todo');
-const Authenticate=require('../controller/auth')
-const router=express();
+const express = require('express');
+const TodoController = require('../controller/todo');
+const Authenticate = require('../controller/auth')
+const router = express.Router(); // Use Router() instead of creating a new instance of express
 
+// Secure the routes by using .all to apply security measures to all HTTP verbs
+router.all('/getAllTasks', Authenticate.authenticateToken, TodoController.getAllTask);
+router.all('/addTasks', Authenticate.authenticateToken, TodoController.creatTask);
+router.all('/deleteTasks/:id', Authenticate.authenticateToken, TodoController.deleteTask);
+router.all('/updateTask/:id', Authenticate.authenticateToken, TodoController.updateTask);
 
-router.route('/getAllTasks').get(Authenticate.authenticateToken,TodoController.getAllTask);
-
-router.route('/addTasks').post(Authenticate.authenticateToken,TodoController.creatTask)
-
-router.route('/deleteTasks/:id').delete(Authenticate.authenticateToken,TodoController.deleteTask)
-
-router.route('/updateTask/:id').patch(Authenticate.authenticateToken,TodoController.updateTask)
-
+// Export the router instance to be used in the main app file
+module.exports = router;
 module.exports=router;
