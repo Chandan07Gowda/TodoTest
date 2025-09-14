@@ -7,7 +7,8 @@ dotenv.config({ path: './config.env' })
 const UserRoutes = require('./routes/user');
 const TodoRoutes = require('./routes/taskRoutes');
 
-
+// Security fix: Disable the default header with information about the version of Express or Node.js
+app.disable('x-powered-by');
 
 const app = express();
 
@@ -19,7 +20,6 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(express.json());
-
 mongoose.connect('mongodb://localhost/todo-app')
   .then(() => console.log('connection is successfull'))
   .catch(err => console.error('Couldn"t connect to mongodB', err))
