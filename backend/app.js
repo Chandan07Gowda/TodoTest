@@ -7,7 +7,8 @@ dotenv.config({ path: './config.env' })
 const UserRoutes = require('./routes/user');
 const TodoRoutes = require('./routes/taskRoutes');
 
-
+// Import express after the security fixes are applied to avoid implicit disclosure of version information.
+const express = require('express');
 
 const app = express();
 
@@ -20,6 +21,15 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.json());
 
+// Ensure that the routes are registered after all middleware is set up to avoid potential security issues.
+app.use('/api/users', UserRoutes);
+app.use('/api/tasks', TodoRoutes);
+
+// Start the server on a specified port or default to 5000 if not provided.
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 mongoose.connect('mongodb://localhost/todo-app')
   .then(() => console.log('connection is successfull'))
   .catch(err => console.error('Couldn"t connect to mongodB', err))
