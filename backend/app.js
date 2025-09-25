@@ -20,6 +20,15 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(express.json());
+
+// Add a middleware to hide the version information from the response headers
+app.disable('x-powered-by');
+
+// Ensure that the app listens on port 3000 for HTTP requests
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 mongoose.connect('mongodb://localhost/todo-app')
   .then(() => console.log('connection is successfull'))
   .catch(err => console.error('Couldn"t connect to mongodB', err))
