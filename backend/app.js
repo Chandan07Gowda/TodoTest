@@ -20,6 +20,23 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(express.json());
+
+// Additional security fixes to prevent information disclosure
+app.disable('x-powered-by'); // Disable the X-Powered-By header
+app.set('etag', false);      // Disable ETag header
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch((err) => console.error(`Error connecting to MongoDB: ${err}`));
+
+// Use routes
+app.use('/api/users', UserRoutes);
+app.use('/api/tasks', TodoRoutes);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 mongoose.connect('mongodb://localhost/todo-app')
   .then(() => console.log('connection is successfull'))
   .catch(err => console.error('Couldn"t connect to mongodB', err))
