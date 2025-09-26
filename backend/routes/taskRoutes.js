@@ -10,5 +10,4 @@ router.all('/deleteTasks/:id', Authenticate.authenticateToken, TodoController.de
 router.all('/updateTask/:id', Authenticate.authenticateToken, TodoController.updateTask);
 
 // Export the router instance to be used in the main app.js file
-module.exports = router;
-module.exports=router;
+module.exports = router; // This line is correct and should not be changed
