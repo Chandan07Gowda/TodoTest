@@ -11,22 +11,42 @@ const TodoRoutes = require('./routes/taskRoutes');
 const express = require('express');
 
 const app = express();
+const tourRoutes=require('./routes/tourRoutes');
+const userRoutes=require('./routes/usersRoutes');
+const reviewRoutes=require('./routes/reviewRoutes');
+const viewRoutes = require ('./routes/viewRoutes');
+const bookingRoutes = require ('./routes/BookingRoutes')
+const { title } = require('process');
 
-app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true,
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+// 2) SECURITY FIX: Use helmet to set security HTTP headers
+const helmet = require('helmet');
+app.use(helmet());
+
+// 3) SECURITY FIX: Prevent information leakage by setting X-Powered-By header to an empty string
+app.disable('x-powered-by');
+
+// 4) SECURITY FIX: Use Content Security Policy (CSP) to restrict the sources of content that can be loaded by your pages
+const csp = require('helmet-csp');
+app.use(csp({
+    directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net'],
+        imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com/your-cloud-name']
+    }
 }));
-app.use(bodyParser.json());
-app.use(express.json());
-mongoose.connect('mongodb://localhost/todo-app')
-  .then(() => console.log('connection is successfull'))
-  .catch(err => console.error('Couldn"t connect to mongodB', err))
 
-app.use('/TODO', UserRoutes)
-app.use('/TODO', TodoRoutes)
+// 5) SECURITY FIX: Prevent clickjacking by setting the X-Frame-Options header to SAMEORIGIN
+app.use(helmet.frameguard({ action: 'sameorigin' }));
 
+const app=express();
 
-const port = process.env.PORT || 2000;
-app.listen(port, () => console.log('Server is running in port 2000'));
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+// 1) GLOBAL MIDDLEWEAR
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// security HTTP Headers
+//app.use(helmet())
