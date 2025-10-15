@@ -1,9 +1,10 @@
 const express = require('express');
 const User = require('../controller/user');
-const router = express.Router(); // Use Router() instead of creating a new instance of express
 
-// Fix 1: Use Router() to create a separate instance for each route
-router.post('/user/register', User.register);
-router.post('/user/login', User.login);
+// Fix 2: Use Router() to create a separate instance for each route
+const userRouter = express.Router();
 
-module.exports = router; // Export the router instance
+userRouter.post('/register', User.register);
+userRouter.post('/login', User.login);
+
+module.exports = userRouter; // Export the router instance

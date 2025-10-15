@@ -11,4 +11,3 @@ router.all('/updateTask/:id', Authenticate.authenticateToken, TodoController.upd
 
 // Export the router instance to be used in the main app.js file
 module.exports = router;
-module.exports=router;
