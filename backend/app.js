@@ -13,7 +13,12 @@ const express = require('express');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: (origin, callback) => {
+    if (!origin || origin === 'http://localhost:4200') {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
