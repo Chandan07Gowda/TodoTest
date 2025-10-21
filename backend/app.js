@@ -13,13 +13,26 @@ const express = require('express');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: (origin, callback) => {
+    if (['http://localhost:4200', 'https://example.com'].includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 app.use(express.json());
+
+// Fixing the security issue
+const version = require('./package.json').version;
+app.get('/api/version', (req, res) => {
+  res.json({ version });
+});
+
+module.exports = app;
 mongoose.connect('mongodb://localhost/todo-app')
   .then(() => console.log('connection is successfull'))
   .catch(err => console.error('Couldn"t connect to mongodB', err))
